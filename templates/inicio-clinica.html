@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>KidsCare clinic - Início</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+
+<body>
+  <div class="app">
+
+    <main class="content">
+
+      <!-- Logo -->
+      <section class="logo-row">
+        <div class="logo-wrapper">
+          <div class="logo-mark">
+            <span class="circle circle-left"></span>
+            <span class="circle circle-right"></span>
+          </div>
+          <div class="logo-text">
+            <span class="logo-title">KidsCare clinic</span>
+            <span class="logo-subtitle">Centro de Neurodiversidade</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Título da página -->
+      <section class="page-title-row">
+        <h1 class="page-title">Início</h1>
+      </section>
+
+      <section class="about-wrapper">
+
+        <!-- Card Sobre a clínica -->
+        <div class="about-card">
+          <div class="about-header">
+            <h2 class="about-title">Sobre a clínica</h2>
+            <p class="about-text">
+              Atendimento humanizado, equipe multidisciplinar e ambientes com redução de estímulos sensoriais.
+            </p>
+          </div>
+
+          <div class="about-grid">
+
+            <div class="about-photo">
+              <img src="{{ url_for('static', filename='img/clinica-foto-1.png') }}" 
+                   alt="Atendimento clínico">
+            </div>
+
+            <div class="about-photo">
+              <img src="{{ url_for('static', filename='img/clinica-foto-2.png') }}" 
+                   alt="Profissional acolhendo família">
+            </div>
+
+            <div class="about-photo">
+              <img src="{{ url_for('static', filename='img/clinica-foto-3.png') }}" 
+                   alt="Atendimento em grupo com crianças">
+            </div>
+
+            <div class="about-photo">
+              <img src="{{ url_for('static', filename='img/clinica-foto-4.png') }}" 
+                   alt="Equipe multidisciplinar em atividade">
+            </div>
+
+            <div class="about-photo">
+              <img src="{{ url_for('static', filename='img/clinica-foto-5.png') }}" 
+                   alt="Terapia com instrumentos musicais">
+            </div>
+
+            <div class="about-photo">
+              <img src="{{ url_for('static', filename='img/clinica-foto-6.png') }}" 
+                   alt="Atendimento psicológico infantil">
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Card de horários -->
+        <div class="schedule-card">
+          Horários: Seg–Sex, 08:00 – 18:00
+        </div>
+
+      </section>
+
+    </main>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>KidsCare clinic - Agendamentos</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+
+  <style>
+    .horarios-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .horario-btn {
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      cursor: pointer;
+      text-align: center;
+      font-size: 14px;
+      background: #f9fafb;
+      transition: 0.2s;
+    }
+    .horario-btn:hover {
+      background: #e0e7ff;
+      border-color: #6366f1;
+    }
+    .horario-btn.selected {
+      background: #6366f1;
+      color: white;
+      border-color: #4f46e5;
+    }
+
+    .doctor-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      background: #fff;
+      margin-bottom: 12px;
+    }
+    .landing-topbar .landing-brand {
+      margin-left: 150px; /* Espaço para o botão Home */
+    }
+  </style>
+</head>
+
+<body class="agendamentos-pac">
+  <div class="app">
+    <a href="{{ url_for('main.landing') }}" class="home-btn" title="Home">
+      <img src="{{ url_for('static', filename='img/botao-de-inicio.png') }}" alt="Home" style="width:32px; height:32px;">
+    </a>
+    <button onclick="window.history.back()" class="btn-voltar">
+      <i class="fas fa-arrow-left"></i> Voltar
+    </button>
+    <!-- Topbar de navegação -->
+    <div class="landing-topbar">
+      <div class="landing-brand">
+        <div class="logo-mark">
+          <span class="circle circle-left"></span>
+          <span class="circle circle-right"></span>
+        </div>
+        <div class="logo-text">
+          <span class="logo-title">KidsCare clinic</span>
+          <span class="logo-subtitle">Centro de Neurodiversidade</span>
+        </div>
+      </div>
+
+      <nav class="landing-nav">
+        <a href="{{ url_for('agendamentos') }}">Agendamentos</a>
+        <a href="{{ url_for('consultas_cliente') }}">Consultas marcadas</a>
+        <a href="{{ url_for('main.perfil') }}">Perfil</a>
+      </nav>
+    </div>
+    <main class="content">
+
+      <!-- Logo -->
+      <!-- <section class="logo-row">
+        <div class="logo-wrapper">
+          <div class="logo-mark">
+            <span class="circle circle-left"></span>
+            <span class="circle circle-right"></span>
+          </div>
+          <div class="logo-text">
+            <span class="logo-title">KidsCare clinic</span>
+            <span class="logo-subtitle">Centro de Neurodiversidade</span>
+          </div>
+        </div>
+      </section> -->
+
+      <section class="page-title-row">
+        <h1 class="page-title">Agendamentos</h1>
+      </section>
+
+      <section class="appointments-wrapper">
+        <div class="appointments-card">
+
+          <div class="appointments-grid">
+
+            <!-- NOVO AGENDAMENTO -->
+            <div class="booking-column">
+              <h2 class="card-section-title">Selecione o Dia e Faça seu Agendamento!</h2>
+
+
+              <!-- Campo DIA com input date -->
+              <div class="form-group">
+                <label for="dia" class="form-label">Dia</label>
+                <input id="dia" name="dia" type="date" class="form-control">
+              </div>
+              
+              <!-- Especialidade escolhida automaticamente quando clicar no médico -->
+              <div class="form-group">
+                <label for="especialidade" class="form-label">Especialidade</label>
+                <input id="especialidade" name="especialidade" type="text"
+                       class="form-control" placeholder="Selecione um médico" readonly>
+              </div>
+
+              <!-- Profissional preenchido automaticamente -->
+              <div class="form-group">
+                <label for="profissional" class="form-label">Profissional</label>
+                <input id="profissional" name="profissional" type="text"
+                       class="form-control" placeholder="Escolha um médico" readonly>
+              </div>
+
+              <!-- HORÁRIOS DISPONÍVEIS -->
+              <div class="form-group">
+                <label class="form-label">Horários disponíveis</label>
+                <div id="horarios-container" class="horarios-grid">
+                  <!-- preenchido via Flask / JS -->
+                </div>
+              </div>
+
+              <div class="appointments-spacer"></div>
+
+              <form method="POST" action="/confirmar_agendamento">
+                <input type="hidden" id="selected_horario" name="horario">
+                <input type="hidden" id="selected_profissional_id" name="profissional_id">
+                <input type="hidden" id="selected_data" name="data">
+
+                <button type="submit" class="btn btn-primary btn-block">
+                  Confirmar agendamento
+                </button>
+              </form>
+            </div>
+
+            <!-- MÉDICOS DISPONÍVEIS -->
+            <div class="doctors-column">
+              <h2 class="card-section-title">Médicos disponíveis</h2>
+
+              <div class="doctor-list">
+
+                {% for medico in profissionais %}
+                <article class="doctor-item" data-medico-id="{{ medico.id }}">
+                  <div class="doctor-avatar"></div>
+                  <div class="doctor-info">
+                    <div class="doctor-name">Dr(a). {{ medico.nome }}</div>
+                    <div class="doctor-meta">{{ medico.especialidade }} • 30 min</div>
+                  </div>
+
+                  <button type="button"
+                          class="btn btn-primary doctor-select-btn"
+                          onclick="selecionarMedico('{{ medico.id }}', '{{ medico.nome }}', '{{ medico.especialidade }}')">
+                    Selecionar
+                  </button>
+                </article>
+                {% endfor %}
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- JS -->
+  <script>
+    function selecionarMedico(id, nome, especialidade) {
+      document.getElementById("profissional").value = nome;
+      document.getElementById("especialidade").value = especialidade;
+      document.getElementById("selected_profissional_id").value = id;
+
+      // Limpa horários anteriores
+      document.getElementById("horarios-container").innerHTML = "";
+
+      // Se dia já tiver sido escolhido, buscar horários
+      const dia = document.getElementById("dia").value;
+      if (dia) buscarHorarios();
+    }
+
+    document.getElementById("dia").addEventListener("change", buscarHorarios);
+
+    function buscarHorarios() {
+      const dia = document.getElementById("dia").value;
+      const profissionalId = document.getElementById("selected_profissional_id").value;
+
+      if (!dia || !profissionalId) return;
+
+      // Salvar data no input hidden
+      document.getElementById("selected_data").value = dia;
+
+      fetch(`/buscar_horarios?data=${dia}&prof=${profissionalId}`)
+        .then(res => res.json())
+        .then(data => {
+          const container = document.getElementById("horarios-container");
+          container.innerHTML = "";
+
+          data.horarios.forEach(h => {
+            const btn = document.createElement("div");
+            btn.classList.add("horario-btn");
+            btn.innerText = h;
+
+            btn.onclick = () => {
+              document.querySelectorAll(".horario-btn").forEach(b => b.classList.remove("selected"));
+              btn.classList.add("selected");
+              document.getElementById("selected_horario").value = h;
+            };
+
+            container.appendChild(btn);
+          });
+        });
+    }
+  </script>
+  <footer class="landing-footer">
+    <div class="landing-inner landing-footer-inner">
+      <div class="landing-brand">
+        <div class="logo-mark">
+          <span class="circle circle-left"></span>
+          <span class="circle circle-right"></span>
+        </div>
+        <div class="logo-text">
+          <span class="logo-title">KidsCare clinic</span>
+          <span class="logo-subtitle">Centro de Neurodiversidade</span>
+        </div>
+      </div>
+      <div class="landing-footer-right">
+        <span class="mini-note">© KidsCare clinic. Cuidado centrado na neurodiversidade.</span>
+        <!-- <a class="btn btn-primary btn-small" href="{{ url_for('app_home') }}">Entrar no sistema</a> -->
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  // Ao abrir a página, esconder todos os cards de médicos
+  document.querySelectorAll(".doctor-item").forEach(card => {
+    card.style.display = "none";
+  });
+
+  // Limpar seleção anterior
+  document.getElementById("profissional").value = "";
+  document.getElementById("especialidade").value = "";
+  document.getElementById("selected_profissional_id").value = "";
+  document.getElementById("horarios-container").innerHTML = "";
+
+  // Adiciona listener ao input date
+  document.getElementById("dia").addEventListener("change", onDiaChange);
+});
+
+// Quando o usuário clica em "Selecionar" (mantive sua função, só ajustei para não assumir que o card esteja visível)
+function selecionarMedico(id, nome, especialidade) {
+  document.getElementById("profissional").value = nome;
+  document.getElementById("especialidade").value = especialidade;
+  document.getElementById("selected_profissional_id").value = id;
+
+  // Limpa horários anteriores
+  document.getElementById("horarios-container").innerHTML = "";
+
+  // Se dia já tiver sido escolhido, buscar horários
+  const dia = document.getElementById("dia").value;
+  if (dia) buscarHorarios();
+}
+
+function onDiaChange() {
+  const dia = document.getElementById("dia").value;
+
+  // Se campo vazio: esconder todos os médicos e limpar seleção
+  if (!dia) {
+    document.querySelectorAll(".doctor-item").forEach(card => {
+      card.style.display = "none";
+    });
+    document.getElementById("profissional").value = "";
+    document.getElementById("especialidade").value = "";
+    document.getElementById("selected_profissional_id").value = "";
+    document.getElementById("horarios-container").innerHTML = "";
+    return;
+  }
+
+  // Caso haja data: buscar médicos disponíveis e mostrá-los
+  fetch(`/profissionais_disponiveis?data=${dia}`)
+    .then(res => res.json())
+    .then(data => {
+      const disponiveis = data.profissionais.map(p => p.id.toString());
+      const cards = document.querySelectorAll(".doctor-item");
+
+      // Mostrar apenas os disponíveis
+      cards.forEach(card => {
+        const pid = card.getAttribute("data-medico-id");
+        if (disponiveis.includes(pid)) {
+          card.style.display = "flex";
+        } else {
+          card.style.display = "none";
+        }
+      });
+
+      // Limpa seleção anterior
+      document.getElementById("profissional").value = "";
+      document.getElementById("especialidade").value = "";
+      document.getElementById("selected_profissional_id").value = "";
+      document.getElementById("horarios-container").innerHTML = "";
+    })
+    .catch(err => {
+      console.error("Erro ao buscar profissionais:", err);
+      // Em caso de erro, manter lista vazia
+      document.querySelectorAll(".doctor-item").forEach(card => card.style.display = "none");
+    });
+}
+
+function buscarHorarios() {
+  const dia = document.getElementById("dia").value;
+  const profissionalId = document.getElementById("selected_profissional_id").value;
+
+  if (!dia || !profissionalId) return;
+
+  // Salvar data no input hidden
+  document.getElementById("selected_data").value = dia;
+
+  fetch(`/buscar_horarios?data=${dia}&prof=${profissionalId}`)
+    .then(res => res.json())
+    .then(data => {
+      const container = document.getElementById("horarios-container");
+      container.innerHTML = "";
+
+      data.horarios.forEach(h => {
+        const btn = document.createElement("div");
+        btn.classList.add("horario-btn");
+        btn.innerText = h;
+
+        btn.onclick = () => {
+          document.querySelectorAll(".horario-btn").forEach(b => b.classList.remove("selected"));
+          btn.classList.add("selected");
+          document.getElementById("selected_horario").value = h;
+        };
+
+        container.appendChild(btn);
+      });
+    })
+    .catch(err => {
+      console.error("Erro ao buscar horários:", err);
+      document.getElementById("horarios-container").innerHTML = "";
+    });
+}
+</script>
+

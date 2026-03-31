@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>KidsCare clinic - Login Paciente</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- CSS via Flask -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+
+<body class="login-pac">
+  <a href="{{ url_for('main.landing') }}" class="home-btn" title="Home">
+    <img src="{{ url_for('static', filename='img/botao-de-inicio.png') }}" alt="Home" style="width:32px; height:32px;">
+  </a>
+  <button onclick="window.history.back()" class="btn-voltar">
+    <i class="fas fa-arrow-left"></i> Voltar
+  </button>
+  <div class="app">
+
+    <main class="content">
+
+      <!-- Logo -->
+      <section class="logo-row">
+        <div class="logo-wrapper">
+          <div class="logo-mark">
+            <span class="circle circle-left"></span>
+            <span class="circle circle-right"></span>
+          </div>
+          <div class="logo-text">
+            <span class="logo-title">KidsCare clinic</span>
+            <span class="logo-subtitle">Centro de Neurodiversidade</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Título da página -->
+      <section class="page-title-row">
+        <h1 class="page-title">Login Paciente</h1>
+      </section>
+
+      <!-- Card de login -->
+      <section class="login-wrapper">
+        <div class="login-card">
+
+          <div class="login-card-header">
+            <h2 class="login-card-title">Acesse sua conta</h2>
+          </div>
+
+          <!-- Formulário corrigido -->
+          <form action="{{ url_for('main.processar_login') }}" method="post">
+            {% if erro %}
+              <div class="alert-erro" style="background:#ffe0e0; color:#b30000; padding:10px; border-radius:6px; margin-bottom:12px; text-align:center;">
+                {{ erro }}
+              </div>
+            {% endif %}
+
+            <div class="form-group">
+              <label for="email" class="form-label">E-mail</label>
+              <input id="email" name="email" type="email" class="form-control"
+                     placeholder="seu@email.com">
+            </div>
+
+            <div class="form-group">
+              <label for="senha" class="form-label">Senha</label>
+              <input id="senha" name="senha" type="password" class="form-control"
+                     placeholder="*******">
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">
+              Entrar
+            </button>
+
+
+          </form>
+
+        </div>
+      </section>
+    </main>
+  </div>
+  <footer class="landing-footer">
+    <div class="landing-inner landing-footer-inner">
+      <div class="landing-brand">
+        <div class="logo-mark">
+          <span class="circle circle-left"></span>
+          <span class="circle circle-right"></span>
+        </div>
+        <div class="logo-text">
+          <span class="logo-title">KidsCare clinic</span>
+          <span class="logo-subtitle">Centro de Neurodiversidade</span>
+        </div>
+      </div>
+      <div class="landing-footer-right">
+        <span class="mini-note">© KidsCare clinic. Cuidado centrado na neurodiversidade.</span>
+        <!-- <a class="btn btn-primary btn-small" href="{{ url_for('app_home') }}">Entrar no sistema</a> -->
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

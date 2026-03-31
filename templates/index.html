@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>KidsCare clinic - Bem-vindo(a)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Fonte Google -->
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <style>
+    
+  </style>
+</head>
+
+<body class="index-page">
+  <a href="{{ url_for('main.landing') }}" class="home-btn" title="Home">
+    <img src="{{ url_for('static', filename='img/botao-de-inicio.png') }}" alt="Home" style="width:32px; height:32px;">
+  </a>
+  <button onclick="window.history.back()" class="btn-voltar">
+    <i class="fas fa-arrow-left"></i> Voltar
+  </button>
+  <!-- Para landing.html, index.html, agendamentos.html, etc -->
+  <a href="{{ url_for('admin') }}" class="admin-btn" title="Painel Admin">
+      <img src="{{ url_for('static', filename='img/settings.png') }}" alt="Settings">
+  </a>
+  
+  <div class="app">
+
+    <main class="content">
+
+      <!-- Logo -->
+      <section class="logo-row">
+        <div class="logo-wrapper">
+          <div class="logo-mark">
+            <span class="circle circle-left"></span>
+            <span class="circle circle-right"></span>
+          </div>
+          <div class="logo-text">
+            <span class="logo-title">KidsCare clinic</span>
+            <span class="logo-subtitle">Centro de Neurodiversidade</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Título de boas-vindas -->
+      <section class="welcome-row">
+        <h1 class="welcome-title">Bem-vindo(a)</h1>
+      </section>
+
+      <!-- Card principal -->
+      <section class="hero-card">
+
+        <div class="hero-header">
+          <div class="hero-text">
+            <h2 class="hero-title">KidsCare clinic</h2>
+            <p class="hero-subtitle">
+              Cuidando de pessoas neurodivergentes com equipe multidisciplinar.
+            </p>
+          </div>
+
+          <div class="hero-graphic">
+            <div class="graphic-outer-circle">
+              <span class="graphic-circle graphic-circle-left"></span>
+              <span class="graphic-circle graphic-circle-right"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-actions">
+
+          <a class="btn btn-primary" href="{{ url_for('main.login') }}">
+            Entrar (Paciente/Responsável)
+          </a>
+
+          <a class="btn btn-secondary" href="{{ url_for('cadastro') }}">
+            Cadastrar
+          </a>
+
+          <a class="btn btn-dark" href="{{ url_for('acesso_profissional') }}">
+            Sou Funcionário/Médico
+          </a>
+
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
+  <footer class="landing-footer">
+    <div class="landing-inner landing-footer-inner">
+      <div class="landing-brand">
+        <div class="logo-mark">
+          <span class="circle circle-left"></span>
+          <span class="circle circle-right"></span>
+        </div>
+        <div class="logo-text">
+          <span class="logo-title">KidsCare clinic</span>
+          <span class="logo-subtitle">Centro de Neurodiversidade</span>
+        </div>
+      </div>
+      <div class="landing-footer-right">
+        <span class="mini-note">© KidsCare clinic. Cuidado centrado na neurodiversidade.</span>
+        <!-- <a class="btn btn-primary btn-small" href="{{ url_for('app_home') }}">Entrar no sistema</a> -->
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

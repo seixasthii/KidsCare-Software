@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>KidsCare clinic - Abertura</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+
+<body class="landing-body">
+  <div class="landing-shell">
+
+    <header class="landing-hero">
+      <div class="landing-inner">
+
+        <div class="landing-topbar">
+          <div class="landing-brand">
+            <div class="logo-mark">
+              <span class="circle circle-left"></span>
+              <span class="circle circle-right"></span>
+            </div>
+            <div class="logo-text">
+              <span class="logo-title">KidsCare clinic</span>
+              <span class="logo-subtitle">Centro de Neurodiversidade</span>
+            </div>
+          </div>
+
+          <nav class="landing-nav">
+            <a href="#servicos">Serviços</a>
+            <a href="#fluxo">Fluxo de cuidado</a>
+            <!-- <a href="#cta">Entrar</a> -->
+          </nav>
+
+          <div class="landing-topbar-actions">
+            <a class="btn btn-ghost btn-small" href="#servicos">Explorar</a>
+            <a class="btn btn-primary btn-small" href="{{ url_for('app_home') }}">Ir para o sistema</a>
+          </div>
+        </div>
+
+        <div class="landing-hero-grid">
+          <div class="landing-hero-copy">
+            <p class="eyebrow">Bem-vindo(a) à KidsCare clinic</p>
+            <h1>Uma porta de entrada acolhedora para pacientes neurodivergentes.</h1>
+            <p class="hero-lead">
+              Comunicação clara para responsáveis, agenda em tempo real e uma equipe multidisciplinar pronta
+              para acompanhar cada jornada.
+            </p>
+
+            <div class="landing-hero-actions">
+              <a class="btn btn-primary" href="{{ url_for('app_home') }}">Acessar plataforma</a>
+              <a class="btn btn-secondary" href="{{ url_for('cadastro') }}">Criar conta</a>
+              <!-- <a class="btn btn-dark" href="{{ url_for('acesso_profissional') }}">Sou profissional</a>
+              <a class="btn btn-ghost" href="{{ url_for('agenda_medica') }}">Agenda médica</a> -->
+            </div>
+
+            <div class="landing-pill-row">
+              <span class="pill">Agendamento online</span>
+              <span class="pill">Equipe multidisciplinar</span>
+              <span class="pill">Ambiente sensorial reduzido</span>
+            </div>
+          </div>
+
+          <div class="landing-hero-panel">
+            <div class="landing-highlight">
+              <div class="highlight-header">
+                <span class="pill pill-strong">Pronto para uso</span>
+                <p>Acompanhe consultas, orientação e evolução em um painel que já fala a língua das famílias.</p>
+              </div>
+
+              <div class="highlight-list">
+                <div class="highlight-item">
+                  <span class="highlight-dot"></span>
+                  <div class="highlight-text">
+                    <strong>Agenda em tempo real</strong>
+                    <span>Veja horários disponíveis e confirme com um toque.</span>
+                  </div>
+                  <span class="mini-badge">Pacientes</span>
+                </div>
+
+                <div class="highlight-item">
+                  <span class="highlight-dot"></span>
+                  <div class="highlight-text">
+                    <strong>Plano integrado</strong>
+                    <span>Equipe multidisciplinar alinhada para cada sessão.</span>
+                  </div>
+                  <span class="mini-badge mini-badge-dark">Equipe</span>
+                </div>
+
+                <div class="highlight-item">
+                  <span class="highlight-dot"></span>
+                  <div class="highlight-text">
+                    <strong>Acompanhamento seguro</strong>
+                    <span>Feedback claro para responsáveis, tudo no mesmo lugar.</span>
+                  </div>
+                  <span class="mini-badge">Responsáveis</span>
+                </div>
+              </div>
+
+              <!-- <div class="highlight-footer">
+                <div>
+                  <span class="mini-note">Clique no botão acima para entrar no sistema.</span>
+                  <div class="mini-note">Para profissionais, mantenha o PIN em mãos.</div>
+                </div>
+                <a class="btn btn-dark btn-small" href="{{ url_for('agendamentos') }}">Ver horários</a>
+              </div> -->
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </header>
+
+    <section id="servicos" class="landing-section">
+      <div class="section-header">
+        <span class="eyebrow">KidsCare clinic</span>
+        <h2>Cuidado completo, do primeiro contato ao acompanhamento contínuo.</h2>
+        <p class="section-subtitle">
+          A mesma identidade visual do sistema aplicada a uma apresentação clara para novos pacientes e responsáveis.
+        </p>
+      </div>
+
+      <div class="landing-card-grid">
+        <article class="landing-card">
+          <div class="landing-card-icon">AI</div>
+          <h3 class="landing-card-title">Avaliação integrada</h3>
+          <p class="landing-card-text">
+            Captação de histórico, triagem inicial e direcionamento rápido para a equipe certa.
+          </p>
+        </article>
+
+        <article class="landing-card">
+          <div class="landing-card-icon">EQ</div>
+          <h3 class="landing-card-title">Equipe multidisciplinar</h3>
+          <p class="landing-card-text">
+            Psicologia, fonoaudiologia, terapia ocupacional e neuropediatria alinhadas em um só fluxo.
+          </p>
+        </article>
+
+        <article class="landing-card">
+          <div class="landing-card-icon">AS</div>
+          <h3 class="landing-card-title">Ambientes sensoriais</h3>
+          <p class="landing-card-text">
+            Espaços preparados para reduzir estímulos, com comunicação simples para orientar cada visita.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section id="fluxo" class="landing-section landing-section-alt">
+      <div class="section-header">
+        <span class="eyebrow">Fluxo de cuidado</span>
+        <h2>Comece pela landing e siga direto para o sistema.</h2>
+        <p class="section-subtitle">
+          Simplificamos o caminho: apresente a clínica, destaque benefícios e leve o visitante ao painel com um clique.
+        </p>
+      </div>
+
+      <div class="landing-steps">
+        <div class="step-card">
+          <span class="step-number">1</span>
+          <h3 class="step-title">Conheça</h3>
+          <p class="step-text">Conteúdos claros, identidade visual consistente e visão rápida dos serviços.</p>
+        </div>
+
+        <div class="step-card">
+          <span class="step-number">2</span>
+          <h3 class="step-title">Decida</h3>
+          <p class="step-text">Botões de ação visíveis para acessar o sistema, cadastrar ou falar com a equipe.</p>
+        </div>
+
+        <div class="step-card">
+          <span class="step-number">3</span>
+          <h3 class="step-title">Entre no painel</h3>
+          <p class="step-text">Login direto para pacientes, responsáveis e profissionais com PIN corporativo.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="cta" class="landing-section">
+      <div class="landing-cta-panel">
+        <div class="landing-cta-copy">
+          <span class="eyebrow eyebrow-light">Pronto para entrar?</span>
+          <h3>Acesse o sistema com um clique.</h3>
+          <p>Continue para a plataforma mantendo a mesma experiência visual e linguagem acolhedora.</p>
+        </div>
+        <div class="landing-cta-actions">
+          <a class="btn btn-primary" href="{{ url_for('app_home') }}">Ir para o sistema</a>
+          <a class="btn btn-dark" href="{{ url_for('main.login') }}">Sou paciente</a>
+        </div>
+      </div>
+    </section>
+
+    <footer class="landing-footer">
+      <div class="landing-inner landing-footer-inner">
+        <div class="landing-brand">
+          <div class="logo-mark">
+            <span class="circle circle-left"></span>
+            <span class="circle circle-right"></span>
+          </div>
+          <div class="logo-text">
+            <span class="logo-title">KidsCare clinic</span>
+            <span class="logo-subtitle">Centro de Neurodiversidade</span>
+          </div>
+        </div>
+        <div class="landing-footer-right">
+          <span class="mini-note">© KidsCare clinic. Cuidado centrado na neurodiversidade.</span>
+          <!-- <a class="btn btn-primary btn-small" href="{{ url_for('app_home') }}">Entrar no sistema</a> -->
+        </div>
+      </div>
+    </footer>
+
+  </div>
+</body>
+</html>

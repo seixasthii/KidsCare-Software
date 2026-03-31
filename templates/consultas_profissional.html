@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>KidsCare clinic - Consultas do Profissional</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <style>
+    .landing-topbar .landing-brand { margin-left: 150px; }
+  </style>
+</head>
+
+<body class="agendamentos-pac">
+
+  <div class="app">
+
+    <a href="{{ url_for('main.landing') }}" class="home-btn" title="Home">
+      <img src="{{ url_for('static', filename='img/botao-de-inicio.png') }}" alt="Home" style="width:32px; height:32px;">
+    </a>
+    <button onclick="window.history.back()" class="btn-voltar">
+      <i class="fas fa-arrow-left"></i> Voltar
+    </button>
+
+    <div class="landing-topbar">
+      <div class="landing-brand">
+        <div class="logo-mark">
+          <span class="circle circle-left"></span>
+          <span class="circle circle-right"></span>
+        </div>
+        <div class="logo-text">
+          <span class="logo-title">KidsCare clinic</span>
+          <span class="logo-subtitle">Centro de Neurodiversidade</span>
+        </div>
+      </div>
+      <nav class="landing-nav">
+        <a href="{{ url_for('consultas_profissional') }}">Minhas Consultas</a>
+        <a href="{{ url_for('configurar_horarios') }}">Agenda</a>
+      </nav>
+    </div>
+
+    <main class="content">
+
+      <section class="page-title-row">
+        <h1 class="page-title">Minhas Consultas</h1>
+      </section>
+
+      <section class="appointments-wrapper">
+        <div class="appointments-card">
+
+          <!-- INFORMAÇÕES DO PROFISSIONAL -->
+          <div class="client-info" style="margin-bottom: 25px;">
+            <h2 class="card-section-title">Informações do Profissional</h2>
+
+            <div class="doctor-item" style="background:#f8fafc; border-color:#e2e8f0;">
+              <div>
+                <div><strong>Nome:</strong> {{ profissional.nome }}</div>
+                <div><strong>Email:</strong> {{ profissional.email }}</div>
+                <div><strong>Especialidade:</strong> {{ profissional.especialidade }}</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CONSULTAS MARCADAS -->
+          <h2 class="card-section-title">Consultas Agendadas</h2>
+
+          {% if consultas %}
+            {% for c in consultas %}
+            <div class="doctor-item">
+
+              <div class="doctor-info">
+
+                <div class="doctor-name">
+                  Paciente: {{ c.clientes.nome }}
+                </div>
+
+                <div class="doctor-meta">
+                  {{ c.data }} às {{ c.horario }}  
+                  <br>
+                  <span style="opacity:0.7;">Email: {{ c.clientes.email }}</span>
+                </div>
+
+              </div>
+
+              <div style="display:flex; gap:10px;">
+                <a href="{{ url_for('cancelar_consulta_prof', id=c.id) }}"
+                   class="btn btn-danger"
+                   onclick="return confirm('Cancelar esta consulta?')">
+                  <i class="fa-solid fa-xmark"></i> Cancelar
+                </a>
+              </div>
+
+            </div>
+            {% endfor %}
+
+          {% else %}
+            <p style="text-align:center; opacity:0.7; margin-top:20px;">
+              Nenhuma consulta agendada.
+            </p>
+          {% endif %}
+
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <footer class="landing-footer">
+    <div class="landing-inner landing-footer-inner">
+      <div class="landing-brand">
+        <div class="logo-mark">
+          <span class="circle circle-left"></span>
+          <span class="circle circle-right"></span>
+        </div>
+        <div class="logo-text">
+          <span class="logo-title">KidsCare clinic</span>
+          <span class="logo-subtitle">Centro de Neurodiversidade</span>
+        </div>
+      </div>
+      <div class="landing-footer-right">
+        <span class="mini-note">© KidsCare clinic. Cuidado centrado na neurodiversidade.</span>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

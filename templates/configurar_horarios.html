@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>KidsCare clinic - Configurar Horários</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+
+  <style>
+    .days-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap:8px; margin-bottom:12px; }
+    .day-card { padding:10px; border-radius:8px; border:1px solid #e5e7eb; background:#fff; text-align:center; }
+    .day-card input[type="time"] { width:100%; box-sizing:border-box; margin-top:6px; }
+    .actions-row { display:flex; gap:10px; margin-top:16px; }
+    .help { font-size:13px; color:#6b7280; margin-bottom:8px; }
+    /* Espaço para os botões Home/Voltar no topo */
+    .landing-topbar .landing-brand { margin-left: 150px; }
+  </style>
+</head>
+<body class="agendamentos-pac">
+  <div class="app">
+    <a href="{{ url_for('main.landing') }}" class="home-btn" title="Home">
+      <img src="{{ url_for('static', filename='img/botao-de-inicio.png') }}" alt="Home" style="width:32px; height:32px;">
+    </a>
+    <button onclick="window.history.back()" class="btn-voltar">
+      <i class="fas fa-arrow-left"></i> Voltar
+    </button>
+
+    <div class="landing-topbar">
+      <div class="landing-brand">
+        <div class="logo-mark">
+          <span class="circle circle-left"></span>
+          <span class="circle circle-right"></span>
+        </div>
+        <div class="logo-text">
+          <span class="logo-title">KidsCare clinic</span>
+          <span class="logo-subtitle">Centro de Neurodiversidade</span>
+        </div>
+      </div>
+      <nav class="landing-nav">
+        <a href="{{ url_for('consultas_profissional') }}">Minhas Consultas</a>
+        <a href="{{ url_for('configurar_horarios') }}">Agenda</a>
+      </nav>
+    </div>
+
+    <main class="content">
+      <section class="page-title-row">
+        <h1 class="page-title">Configurar meus horários</h1>
+      </section>
+
+      <section class="appointments-wrapper">
+        <div class="appointments-card">
+
+          <p class="help">Selecione os dias em que você trabalha e defina o horário início e fim. Cada dia será salvo como um registro em <code>horarios_profissionais</code> no formato <strong>08:00-17:00</strong>.</p>
+
+          <form id="horariosForm" onsubmit="return false;">
+            <div class="days-grid">
+              <!-- dias serão gerados pelo JS -->
+            </div>
+
+            <div class="actions-row">
+              <button id="btnSalvar" class="btn btn-primary" type="button">Salvar horários</button>
+              <button id="btnLimpar" class="btn btn-ghost" type="button">Limpar seleção</button>
+              <span id="statusMsg" style="align-self:center; margin-left:8px; color:#065f46; display:none;"></span>
+            </div>
+          </form>
+
+          <hr style="margin:18px 0; border-color:#eef2ff;">
+          <div style="font-size:13px; color:#6b7280;">Importante: esses horários definem quando você aparece como disponível no agendamento para os pacientes. Alterações refletem imediatamente.</div>
+
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer class="landing-footer">
+    <div class="landing-inner landing-footer-inner">
+      <div class="landing-brand">
+        <div class="logo-mark"><span class="circle circle-left"></span><span class="circle circle-right"></span></div>
+        <div class="logo-text"><span class="logo-title">KidsCare clinic</span><span class="logo-subtitle">Centro de Neurodiversidade</span></div>
+      </div>
+      <div class="landing-footer-right"><span class="mini-note">© KidsCare clinic. Cuidado centrado na neurodiversidade.</span></div>
+    </div>
+  </footer>
+
+<script>
+  // Dias da semana para exibir
+  const DIAS = [
+    {key: "Seg", label: "Seg"},
+    {key: "Ter", label: "Ter"},
+    {key: "Qua", label: "Qua"},
+    {key: "Qui", label: "Qui"},
+    {key: "Sex", label: "Sex"},
+    {key: "Sáb", label: "Sáb"},
+    {key: "Dom", label: "Dom"}
+  ];
+
+  function montarUI() {
+    const grid = document.querySelector(".days-grid");
+    grid.innerHTML = "";
+    DIAS.forEach(d => {
+      const div = document.createElement("div");
+      div.className = "day-card";
+      div.innerHTML = `
+        <div><label><input type="checkbox" class="day-enable" data-dia="${d.key}"> <strong>${d.label}</strong></label></div>
+        <div style="margin-top:8px;">
+          <input type="time" class="day-start" data-dia="${d.key}" disabled>
+          <input type="time" class="day-end" data-dia="${d.key}" disabled style="margin-top:6px;">
+        </div>
+      `;
+      grid.appendChild(div);
+    });
+
+    // listeners
+    document.querySelectorAll(".day-enable").forEach(chk => {
+      chk.addEventListener("change", (e) => {
+        const dia = e.target.dataset.dia;
+        const start = document.querySelector(`.day-start[data-dia="${dia}"]`);
+        const end = document.querySelector(`.day-end[data-dia="${dia}"]`);
+        start.disabled = !e.target.checked;
+        end.disabled = !e.target.checked;
+        if (!e.target.checked) { start.value=""; end.value=""; }
+      });
+    });
+  }
+
+  async function carregarHorarios() {
+    try {
+      const res = await fetch('/horarios_profissional');
+      if (!res.ok) throw new Error('Erro ao carregar');
+      const data = await res.json();
+      // data.horarios = [{dia_semana:"Seg", horario:"08:00-17:00"}, ...]
+      if (!data.horarios) return;
+      data.horarios.forEach(h => {
+        const dia = h.dia_semana;
+        const parts = (h.horario || "").split("-");
+        if (parts.length === 2) {
+          const start = parts[0];
+          const end = parts[1];
+          const chk = document.querySelector(`.day-enable[data-dia="${dia}"]`);
+          const startInput = document.querySelector(`.day-start[data-dia="${dia}"]`);
+          const endInput = document.querySelector(`.day-end[data-dia="${dia}"]`);
+          if (chk) {
+            chk.checked = true;
+            startInput.disabled = false;
+            endInput.disabled = false;
+            startInput.value = start;
+            endInput.value = end;
+          }
+        }
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  function coletarDadosFormulario() {
+    const horarios = [];
+    document.querySelectorAll(".day-enable").forEach(chk => {
+      if (chk.checked) {
+        const dia = chk.dataset.dia;
+        const start = document.querySelector(`.day-start[data-dia="${dia}"]`).value;
+        const end = document.querySelector(`.day-end[data-dia="${dia}"]`).value;
+        horarios.push({dia_semana: dia, inicio: start, fim: end});
+      }
+    });
+    return horarios;
+  }
+
+  function validarHorarios(horarios) {
+    for (const h of horarios) {
+      if (!h.inicio || !h.fim) {
+        return {ok:false, msg:`Preencha início e fim para ${h.dia_semana}`};
+      }
+      if (h.inicio >= h.fim) {
+        return {ok:false, msg:`Horário inválido em ${h.dia_semana}: início deve ser antes do fim`};
+      }
+    }
+    return {ok:true};
+  }
+
+  async function salvar() {
+    const btn = document.getElementById('btnSalvar');
+    const status = document.getElementById('statusMsg');
+    btn.disabled = true;
+    status.style.display = "none";
+
+    const dados = coletarDadosFormulario();
+    const valido = validarHorarios(dados);
+    if (!valido.ok) {
+      alert(valido.msg);
+      btn.disabled = false;
+      return;
+    }
+
+    try {
+      const res = await fetch('/salvar_horarios', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({horarios: dados})
+      });
+      if (!res.ok) throw new Error('Erro ao salvar');
+      status.innerText = "Horários salvos com sucesso.";
+      status.style.display = "inline-block";
+      setTimeout(()=> status.style.display="none", 3000);
+    } catch (err) {
+      console.error(err);
+      alert("Erro ao salvar horários. Veja console.");
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    montarUI();
+    carregarHorarios();
+
+    document.getElementById('btnSalvar').addEventListener('click', salvar);
+    document.getElementById('btnLimpar').addEventListener('click', () => {
+      document.querySelectorAll('.day-enable').forEach(chk => chk.checked = false);
+      document.querySelectorAll('.day-start, .day-end').forEach(i => { i.value=""; i.disabled = true; });
+    });
+  });
+</script>
+</body>
+</html>

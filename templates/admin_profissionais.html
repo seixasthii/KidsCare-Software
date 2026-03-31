@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>KidsCare clinic - Admin de Profissionais</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <style>
+    /* Espaço para os botões Home/Voltar no topo, igual às demais telas */
+    .landing-topbar .landing-brand { margin-left: 150px; }
+  </style>
+</head>
+
+<body class="agendamentos-pac">
+
+  <div class="app">
+    <a href="{{ url_for('main.landing') }}" class="home-btn" title="Home">
+      <img src="{{ url_for('static', filename='img/botao-de-inicio.png') }}" style="width:32px;">
+    </a>
+
+    <button onclick="window.history.back()" class="btn-voltar">
+      <i class="fas fa-arrow-left"></i> Voltar
+    </button>
+
+    <div class="landing-topbar">
+      <div class="landing-brand">
+        <div class="logo-mark">
+          <span class="circle circle-left"></span>
+          <span class="circle circle-right"></span>
+        </div>
+        <div class="logo-text">
+          <span class="logo-title">KidsCare clinic</span>
+          <span class="logo-subtitle">Centro de Neurodiversidade</span>
+        </div>
+      </div>
+    </div>
+
+    <main class="content">
+
+      <section class="page-title-row">
+        <h1 class="page-title">Painel Administrativo</h1>
+      </section>
+
+      <section class="appointments-wrapper">
+        <div class="appointments-card">
+
+          <!-- CRIAR NOVO PROFISSIONAL -->
+          <h2 class="card-section-title">Adicionar Novo Profissional</h2>
+
+          <form action="{{ url_for('admin_criar_profissional') }}" method="POST" style="margin-bottom:25px;">
+            <div class="signup-grid">
+
+              <div class="form-group">
+                <label class="form-label">Nome</label>
+                <input type="text" name="nome" class="form-control" required>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Especialidade</label>
+                <input type="text" name="especialidade" class="form-control" required>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Email corporativo</label>
+                <input type="email" name="email" class="form-control" required>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Senha de login</label>
+                <input type="password" name="senha" class="form-control" required>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">PIN (4 dígitos)</label>
+                <input type="text" name="pin" maxlength="4" class="form-control" required>
+              </div>
+
+            </div>
+
+            <button class="btn btn-primary" type="submit">Criar Profissional</button>
+          </form>
+
+          <hr style="margin:25px 0; border-color:#e5e7eb;">
+
+          <!-- LISTA DE PROFISSIONAIS -->
+          <h2 class="card-section-title">Lista de Profissionais</h2>
+
+          {% if profissionais %}
+
+            {% for p in profissionais %}
+            <div class="doctor-item">
+              <div class="doctor-info">
+                <div class="doctor-name">{{ p.nome }}</div>
+                <div class="doctor-meta">
+                  {{ p.especialidade }}<br>
+                  <small>{{ p.email }}</small>
+                </div>
+              </div>
+
+              <form action="{{ url_for('admin_deletar_profissional', id=p.id) }}" method="POST"
+                    onsubmit="return confirm('Remover este profissional?')">
+                <button class="btn btn-danger" type="submit">
+                  <i class="fa-solid fa-trash"></i> Deletar
+                </button>
+              </form>
+            </div>
+            {% endfor %}
+
+          {% else %}
+            <p style="text-align:center; opacity:0.6; margin-top:10px;">
+              Nenhum profissional cadastrado.
+            </p>
+          {% endif %}
+
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+</body>
+</html>

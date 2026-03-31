@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>KidsCare clinic - Acesso Profissional</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- CSS via Flask -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+
+<body class="login-pro">
+  <a href="{{ url_for('main.landing') }}" class="home-btn" title="Home">
+    <img src="{{ url_for('static', filename='img/botao-de-inicio.png') }}" alt="Home" style="width:32px; height:32px;">
+  </a>
+  <button onclick="window.history.back()" class="btn-voltar">
+    <i class="fas fa-arrow-left"></i> Voltar
+  </button>
+  <div class="app">
+
+    <main class="content">
+
+      <!-- Logo -->
+      <section class="logo-row">
+        <div class="logo-wrapper">
+          <div class="logo-mark">
+            <span class="circle circle-left"></span>
+            <span class="circle circle-right"></span>
+          </div>
+          <div class="logo-text">
+            <span class="logo-title">KidsCare clinic</span>
+            <span class="logo-subtitle">Centro de Neurodiversidade</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Título da página -->
+      <section class="page-title-row">
+        <h1 class="page-title">Acesso Profissional</h1>
+      </section>
+
+      <!-- Card de acesso profissional -->
+      <section class="pro-wrapper">
+        <div class="pro-card">
+
+          <div class="pro-card-header">
+            <h2 class="pro-card-title">Área restrita</h2>
+          </div>
+
+          {% if erro %}
+          <div class="alert alert-danger" role="alert" style="margin-bottom: 1.5rem; padding: 1rem; background-color: #fee; border: 1px solid #fcc; border-radius: 8px; color: #c33;">
+            <i class="fas fa-exclamation-circle"></i> {{ erro }}
+          </div>
+          {% endif %}
+
+          <!-- Formulário ajustado -->
+          <form action="{{ url_for('main.processar_login_profissional') }}" method="post">
+
+            <div class="form-group">
+              <label for="emailCorporativo" class="form-label">E-mail corporativo</label>
+              <input id="emailCorporativo" name="emailCorporativo" type="email"
+                     class="form-control" placeholder="nome@kidscareclinic.com">
+            </div>
+
+            <div class="pro-grid">
+
+              <div class="form-group">
+                <label for="senha" class="form-label">Senha</label>
+                <input id="senha" name="senha" type="password"
+                       class="form-control" placeholder="*******">
+              </div>
+
+              <div class="form-group">
+                <label for="pin" class="form-label">Código de acesso (PIN)</label>
+                <input id="pin" name="pin" type="text"
+                       class="form-control" placeholder="Informe seu PIN">
+              </div>
+
+            </div>
+
+            <div class="pro-actions">
+              <button type="submit" class="btn btn-primary btn-block">
+                Entrar
+              </button>
+            </div>
+
+          </form>
+
+        </div>
+      </section>
+
+    </main>
+  </div>
+  <footer class="landing-footer">
+    <div class="landing-inner landing-footer-inner">
+      <div class="landing-brand">
+        <div class="logo-mark">
+          <span class="circle circle-left"></span>
+          <span class="circle circle-right"></span>
+        </div>
+        <div class="logo-text">
+          <span class="logo-title">KidsCare clinic</span>
+          <span class="logo-subtitle">Centro de Neurodiversidade</span>
+        </div>
+      </div>
+      <div class="landing-footer-right">
+        <span class="mini-note">© KidsCare clinic. Cuidado centrado na neurodiversidade.</span>
+        <!-- <a class="btn btn-primary btn-small" href="{{ url_for('app_home') }}">Entrar no sistema</a> -->
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>KidsCare clinic - Meu Perfil</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <style>
+    /* Reserva espaço para os botões Home/Voltar, igual à tela de agendamentos */
+    .landing-topbar .landing-brand {
+      margin-left: 150px;
+    }
+  </style>
+</head>
+
+<body class="cadastro-novo">
+
+  <a href="{{ url_for('main.landing') }}" class="home-btn" title="Home">
+    <img src="{{ url_for('static', filename='img/botao-de-inicio.png') }}" alt="Home" style="width:32px; height:32px;">
+  </a>
+
+  <button onclick="window.history.back()" class="btn-voltar">
+    <i class="fas fa-arrow-left"></i> Voltar
+  </button>
+  <!-- Logo -->
+    <div class="landing-topbar">
+      <div class="landing-brand">
+        <div class="logo-mark">
+          <span class="circle circle-left"></span>
+          <span class="circle circle-right"></span>
+        </div>
+        <div class="logo-text">
+          <span class="logo-title">KidsCare clinic</span>
+          <span class="logo-subtitle">Centro de Neurodiversidade</span>
+        </div>
+      </div>
+
+      <nav class="landing-nav">
+        <a href="{{ url_for('agendamentos') }}">Agendamentos</a>
+        <a href="{{ url_for('consultas_cliente') }}">Consultas marcadas</a>
+        <a href="{{ url_for('main.perfil') }}">Perfil</a>
+      </nav>
+
+    </div>
+
+
+<div class="app">
+
+  <main class="content">
+
+    <!-- Título -->
+    <section class="page-title-row">
+      <h1 class="page-title">Meu Perfil</h1>
+    </section>
+
+    <!-- Card -->
+    <section class="signup-wrapper">
+      <div class="signup-card">
+
+        <div class="signup-card-header">
+          <h2 class="signup-card-title">Dados Pessoais</h2>
+        </div>
+
+        <form action="{{ url_for('atualizar_perfil') }}" method="post">
+          <div class="signup-grid">
+
+            <div class="form-group">
+              <label class="form-label">Nome completo</label>
+              <input type="text" class="form-control" name="nome"
+                     value="{{ cliente.nome }}" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Data de nascimento</label>
+              <input type="date" class="form-control" name="data_nascimento"
+                     value="{{ cliente.data_nascimento }}" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">CPF</label>
+              <input type="text" class="form-control" id="cpf" name="cpf"
+                     value="{{ cliente.cpf }}" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Telefone</label>
+              <input type="text" class="form-control" id="telefone" name="telefone"
+                     value="{{ cliente.telefone }}">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">E-mail</label>
+              <input type="email" class="form-control" name="email"
+                     value="{{ cliente.email }}" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Endereço</label>
+              <input type="text" class="form-control" name="endereco"
+                     value="{{ cliente.endereco }}">
+            </div>
+
+            <!-- Alteração de senha -->
+            <div class="form-group">
+              <label class="form-label">Nova senha (opcional)</label>
+              <input type="password" class="form-control" name="nova_senha"
+                     placeholder="Deixe em branco para manter a atual">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Confirmar nova senha</label>
+              <input type="password" class="form-control" name="confirmar_senha"
+                     placeholder="Repita a nova senha">
+            </div>
+
+          </div>
+
+          <div class="signup-actions">
+            <button type="submit" class="btn btn-primary">
+              Salvar alterações
+            </button>
+          </div>
+
+        </form>
+
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<footer class="landing-footer">
+  <div class="landing-inner landing-footer-inner">
+    <div class="landing-brand">
+      <div class="logo-mark">
+        <span class="circle circle-left"></span>
+        <span class="circle circle-right"></span>
+      </div>
+      <div class="logo-text">
+        <span class="logo-title">KidsCare clinic</span>
+        <span class="logo-subtitle">Centro de Neurodiversidade</span>
+      </div>
+    </div>
+    <div class="landing-footer-right">
+      <span class="mini-note">© KidsCare clinic. Cuidado centrado na neurodiversidade.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Máscara CPF
+  const cpfInput = document.getElementById('cpf');
+  cpfInput.addEventListener('input', function(e) {
+    let value = e.target.value.replace(/\D/g, '').substring(0, 11);
+
+    if (value.length > 9)
+      value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+    else if (value.length > 6)
+      value = value.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
+    else if (value.length > 3)
+      value = value.replace(/(\d{3})(\d{1,3})/, '$1.$2');
+
+    e.target.value = value;
+  });
+
+  // Máscara Telefone
+  const telInput = document.getElementById('telefone');
+  telInput.addEventListener('input', function(e) {
+    let value = e.target.value.replace(/\D/g, '').substring(0, 11);
+
+    if (value.length > 10)
+      value = value.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+    else if (value.length > 6)
+      value = value.replace(/(\d{2})(\d{4})(\d{1,4})/, '($1) $2-$3');
+    else if (value.length > 2)
+      value = value.replace(/(\d{2})(\d{1,5})/, '($1) $2');
+    else if (value.length > 0)
+      value = value.replace(/(\d{1,2})/, '($1');
+
+    e.target.value = value;
+  });
+</script>
+
+</body>
+</html>

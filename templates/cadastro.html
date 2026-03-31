@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>KidsCare clinic - Cadastro</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+
+<body class="cadastro-novo">
+  <a href="{{ url_for('main.landing') }}" class="home-btn" title="Home">
+    <img src="{{ url_for('static', filename='img/botao-de-inicio.png') }}" alt="Home" style="width:32px; height:32px;">
+  </a>
+  <button onclick="window.history.back()" class="btn-voltar">
+    <i class="fas fa-arrow-left"></i> Voltar
+  </button>
+<div class="app">
+  
+  <main class="content">
+
+    <!-- Logo -->
+    <section class="logo-row">
+      <div class="logo-wrapper">
+        <div class="logo-mark">
+          <span class="circle circle-left"></span>
+          <span class="circle circle-right"></span>
+        </div>
+        <div class="logo-text">
+          <span class="logo-title">KidsCare clinic</span>
+          <span class="logo-subtitle">Centro de Neurodiversidade</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Título -->
+    <section class="page-title-row">
+      <h1 class="page-title">Cadastro</h1>
+    </section>
+
+    <!-- Card de cadastro -->
+    <section class="signup-wrapper">
+      <div class="signup-card">
+
+        <div class="signup-card-header">
+          <h2 class="signup-card-title">Crie sua conta</h2>
+        </div>
+
+        {% if erro %}
+        <div class="alert alert-error" style="margin: 1rem 0; padding: 1rem; background-color: #fee; border: 1px solid #fcc; border-radius: 8px; color: #c33;">
+          <i class="fas fa-exclamation-circle"></i> {{ erro }}
+        </div>
+        {% endif %}
+
+        <form action="{{ url_for('main.processar_cadastro') }}" method="post">
+          <div class="signup-grid">
+
+            <div class="form-group">
+              <label for="nomeCompleto" class="form-label">Nome completo</label>
+              <input id="nomeCompleto" name="nomeCompleto" type="text" class="form-control" required
+                     placeholder="Ex.: Maria dos Santos">
+            </div>
+
+            <div class="form-group">
+              <label for="dataNascimento" class="form-label">Data de Nascimento</label>
+              <input id="dataNascimento" name="dataNascimento" type="date" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+              <label for="cpf" class="form-label">CPF</label>
+              <input id="cpf" name="cpf" type="text" class="form-control" required
+                     placeholder="000.000.000-00">
+            </div>
+
+            <div class="form-group">
+              <label for="telefone" class="form-label">Telefone</label>
+              <input id="telefone" name="telefone" type="tel" class="form-control"
+                     placeholder="(11) 99999-9999">
+            </div>
+
+            <div class="form-group">
+              <label for="email" class="form-label">E-mail</label>
+              <input id="email" name="email" type="email" class="form-control"
+                     placeholder="email@exemplo.com">
+            </div>
+
+            <div class="form-group">
+              <label for="endereco" class="form-label">Endereço</label>
+              <input id="endereco" name="endereco" type="text" class="form-control"
+                     placeholder="Rua, número e bairro">
+            </div>
+
+            <div class="form-group">
+              <label for="senha" class="form-label">Senha</label>
+              <input id="senha" name="senha" type="password" class="form-control" required
+                     placeholder="mín. 8 caracteres">
+            </div>
+
+            <div class="form-group">
+              <label for="confirmarSenha" class="form-label">Confirmar senha</label>
+              <input id="confirmarSenha" name="confirmarSenha" type="password" class="form-control" required
+                     placeholder="repita a senha">
+            </div>
+
+          </div>
+
+          <div class="signup-actions">
+            <button type="submit" class="btn btn-primary">
+              Criar conta
+            </button>
+          </div>
+        </form>
+
+      </div>
+    </section>
+
+  </main>
+</div>
+<footer class="landing-footer">
+  <div class="landing-inner landing-footer-inner">
+    <div class="landing-brand">
+      <div class="logo-mark">
+        <span class="circle circle-left"></span>
+        <span class="circle circle-right"></span>
+      </div>
+      <div class="logo-text">
+        <span class="logo-title">KidsCare clinic</span>
+        <span class="logo-subtitle">Centro de Neurodiversidade</span>
+      </div>
+    </div>
+    <div class="landing-footer-right">
+      <span class="mini-note">© KidsCare clinic. Cuidado centrado na neurodiversidade.</span>
+      <!-- <a class="btn btn-primary btn-small" href="{{ url_for('app_home') }}">Entrar no sistema</a> -->
+    </div>
+  </div>
+</footer>
+<script>
+  // Máscara para CPF
+  const cpfInput = document.getElementById('cpf');
+  cpfInput.addEventListener('input', function(e) {
+    let value = e.target.value.replace(/\D/g, '');
+    value = value.substring(0, 11); // Limita a 11 dígitos
+    
+    if (value.length > 9) {
+      value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+    } else if (value.length > 6) {
+      value = value.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
+    } else if (value.length > 3) {
+      value = value.replace(/(\d{3})(\d{1,3})/, '$1.$2');
+    }
+    
+    e.target.value = value;
+  });
+
+  // Máscara para Telefone
+  const telefoneInput = document.getElementById('telefone');
+  telefoneInput.addEventListener('input', function(e) {
+    let value = e.target.value.replace(/\D/g, '');
+    value = value.substring(0, 11); // Limita a 11 dígitos
+    
+    if (value.length > 10) {
+      value = value.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+    } else if (value.length > 6) {
+      value = value.replace(/(\d{2})(\d{4})(\d{1,4})/, '($1) $2-$3');
+    } else if (value.length > 2) {
+      value = value.replace(/(\d{2})(\d{1,5})/, '($1) $2');
+    } else if (value.length > 0) {
+      value = value.replace(/(\d{1,2})/, '($1');
+    }
+    
+    e.target.value = value;
+  });
+</script>
+</body>
+</html>
