@@ -39,8 +39,8 @@
         </div>
       </div>
       <nav class="landing-nav">
-        <a href="{{ url_for('consultas_profissional') }}">Minhas Consultas</a>
-        <a href="{{ url_for('configurar_horarios') }}">Agenda</a>
+        <a href="{{ url_for('main.consultas_profissional') }}">Minhas Consultas</a>
+        <a href="{{ url_for('main.configurar_horarios') }}">Agenda</a>
       </nav>
     </div>
 
@@ -88,7 +88,7 @@
               </div>
 
               <div style="display:flex; gap:10px;">
-                <a href="{{ url_for('cancelar_consulta_prof', id=c.id) }}"
+                <a href="{{ url_for('main.cancelar_consulta_prof', id=c.id) }}"
                    class="btn btn-danger"
                    onclick="return confirm('Cancelar esta consulta?')">
                   <i class="fa-solid fa-xmark"></i> Cancelar

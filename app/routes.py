@@ -147,10 +147,107 @@ def confirmar_agendamento():
             "horario": horario,
             "status": "pendente"
         }).execute()
-        return redirect(url_for("main.agendamentos"))
+        return redirect(url_for("main.consultas_cliente"))
     except Exception as e:
         print("Erro ao agendar:", e)
         return "Erro ao agendar consulta", 500
+    
+@bp.route('/consultas_cliente')
+@cliente_required
+def consultas_cliente():
+    if "cliente_id" not in session:
+        return redirect(url_for('main.login'))
+    
+    cliente_id = session.get("cliente_id")
+
+    # Buscar dados do cliente
+    rc = supabase.table("clientes").select("*").eq("id", cliente_id).execute()
+    cliente = rc.data[0] if rc.data else None
+
+    # Buscar consultas com dados do profissional
+    rcons = supabase.table("consultas")\
+        .select("""
+            id,
+            data,
+            horario,
+            status,
+            profissionais (
+                nome,
+                especialidade
+            )
+        """)\
+        .eq("cliente_id", cliente_id)\
+        .order("data")\
+        .order("horario")\
+        .execute()
+
+    return render_template("consultas_marcadas.html",
+                           cliente=cliente,
+                           consultas=rcons.data)
+
+@bp.route('/cancelar_consulta/<int:id>')
+@cliente_required
+def cancelar_consulta(id):
+    try:
+        supabase.table("consultas").delete().eq("id", id).execute()
+        return redirect(url_for('main.consultas_cliente'))
+    except Exception as e:
+        print("Erro ao cancelar consulta:", e)
+        return redirect(url_for('main.consultas_cliente'))
+
+@bp.route('/perfil')
+def perfil():
+    if "cliente_id" not in session:
+        return redirect(url_for("main.login"))
+
+    cliente_id = session["cliente_id"]
+
+    resp = supabase.table("clientes").select("*").eq("id", cliente_id).execute()
+
+    if not resp.data:
+        return "Cliente não encontrado", 404
+
+    cliente = resp.data[0]
+
+    return render_template("perfil.html", cliente=cliente)
+
+
+@bp.route('/atualizar_perfil', methods=["POST"])
+def atualizar_perfil():
+    if "cliente_id" not in session:
+        return redirect(url_for("main.login"))
+
+    cliente_id = session["cliente_id"]
+
+    nome = request.form.get("nome")
+    data_nascimento = request.form.get("data_nascimento")
+    cpf = request.form.get("cpf")
+    telefone = request.form.get("telefone")
+    email = request.form.get("email")
+    endereco = request.form.get("endereco")
+
+    nova_senha = request.form.get("nova_senha")
+    confirmar_senha = request.form.get("confirmar_senha")
+
+    update_data = {
+        "nome": nome,
+        "data_nascimento": data_nascimento,
+        "cpf": cpf,
+        "telefone": telefone,
+        "email": email,
+        "endereco": endereco
+    }
+
+    if nova_senha:
+        if nova_senha != confirmar_senha:
+            return "Erro: As senhas não coincidem.", 400
+
+        senha_hash = bcrypt.hashpw(nova_senha.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+        update_data["senha"] = senha_hash
+
+    supabase.table("clientes").update(update_data).eq("id", cliente_id).execute()
+
+    return redirect(url_for("main.perfil"))
 
 # ------------------------------
 # LOGIN E CADASTRO
@@ -302,6 +399,29 @@ def consultas_profissional():
                            profissional=profissional,
                            consultas=consultas)
 
+@bp.route('/cancelar_consulta_prof/<int:id>')
+@profissional_required
+def cancelar_consulta_prof(id):
+    # Segurança: confirmar que a consulta pertence ao cliente
+    if "profissional_id" not in session:
+        return redirect(url_for("acesso_profissional"))
+
+    prof_id = session["profissional_id"]
+
+    resp = supabase.table("consultas").select("*").eq("id", id).execute()
+
+    if not resp.data:
+        return "Consulta não encontrada", 404
+
+    consulta = resp.data[0]
+
+    if consulta["profissional_id"] != prof_id:
+        return "Acesso negado", 401
+
+    supabase.table("consultas").delete().eq("id", id).execute()
+
+    return redirect(url_for("main.consultas_profissional"))
+
 @bp.route('/horarios_profissional')
 def horarios_profissional():
     """
@@ -369,12 +489,44 @@ def admin_profissionais():
     resp = supabase.table("profissionais").select("*").execute()
     return render_template("admin_profissionais.html", profissionais=resp.data)
 
+@bp.route('/admin_criar_profissional', methods=["POST"])
+@admin_required
+def admin_criar_profissional():
+    nome = request.form.get("nome")
+    especialidade = request.form.get("especialidade")
+    email = request.form.get("email")
+    senha = request.form.get("senha")
+    pin = request.form.get("pin")
+    senha_hash = bcrypt.hashpw(senha.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+    try:
+        supabase.table("profissionais").insert({
+            "nome": nome,
+            "especialidade": especialidade,
+            "email": email,
+            "senha": senha_hash,
+            "pin": pin
+        }).execute()
+        return redirect(url_for('main.admin_profissionais'))
+    except Exception as e:
+        print("Erro no Supabase:", e)
+        return redirect(url_for('main.admin_profissionais', erro="Erro ao cadastrar."))
+    
+@bp.route('/admin_deletar_profissional/<int:id>', methods=["POST"])
+@admin_required
+def admin_deletar_profissional(id):
+    try:
+        supabase.table("profissionais").delete().eq("id", id).execute()
+        return redirect(url_for('main.admin_profissionais'))
+    except Exception as e:
+        print("Erro ao deletar profissional:", e)
+        return redirect(url_for('main.admin_profissionais', erro="Erro ao deletar profissional."))
+
 # ------------------------------
 # TRATATIVAS GET PARA POST
 # ------------------------------
 
 @bp.route("/confirmar_agendamento", methods=["GET"])
-def confirmar_agendamento_get(): return redirect(url_for("main.agendamentos"))
+def confirmar_agendamento_get(): return redirect(url_for("main.consultas_cliente"))
 
 @bp.route("/processar_login", methods=["GET"])
 def processar_login_get(): return redirect(url_for("main.login"))

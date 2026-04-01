@@ -42,8 +42,8 @@
       </div>
 
       <nav class="landing-nav">
-        <a href="{{ url_for('agendamentos') }}">Agendamentos</a>
-        <a href="{{ url_for('consultas_cliente') }}">Consultas marcadas</a>
+        <a href="{{ url_for('main.agendamentos') }}">Agendamentos</a>
+        <a href="{{ url_for('main.consultas_cliente') }}">Consultas marcadas</a>
         <a href="{{ url_for('main.perfil') }}">Perfil</a>
       </nav>
 
@@ -67,7 +67,7 @@
           <h2 class="signup-card-title">Dados Pessoais</h2>
         </div>
 
-        <form action="{{ url_for('atualizar_perfil') }}" method="post">
+        <form action="{{ url_for('main.atualizar_perfil') }}" method="post">
           <div class="signup-grid">
 
             <div class="form-group">

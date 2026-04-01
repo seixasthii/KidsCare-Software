@@ -38,7 +38,7 @@
 
           <div class="landing-topbar-actions">
             <a class="btn btn-ghost btn-small" href="#servicos">Explorar</a>
-            <a class="btn btn-primary btn-small" href="{{ url_for('app_home') }}">Ir para o sistema</a>
+            <a class="btn btn-primary btn-small" href="{{ url_for('main.app_home') }}">Ir para o sistema</a>
           </div>
         </div>
 
@@ -52,10 +52,10 @@
             </p>
 
             <div class="landing-hero-actions">
-              <a class="btn btn-primary" href="{{ url_for('app_home') }}">Acessar plataforma</a>
-              <a class="btn btn-secondary" href="{{ url_for('cadastro') }}">Criar conta</a>
-              <!-- <a class="btn btn-dark" href="{{ url_for('acesso_profissional') }}">Sou profissional</a>
-              <a class="btn btn-ghost" href="{{ url_for('agenda_medica') }}">Agenda médica</a> -->
+              <a class="btn btn-primary" href="{{ url_for('main.app_home') }}">Acessar plataforma</a>
+              <a class="btn btn-secondary" href="{{ url_for('main.cadastro') }}">Criar conta</a>
+              <!-- <a class="btn btn-dark" href="{{ url_for('main.acesso_profissional') }}">Sou profissional</a>
+              <a class="btn btn-ghost" href="{{ url_for('main.agendamentos') }}">Agenda médica</a> -->
             </div>
 
             <div class="landing-pill-row">
@@ -106,7 +106,7 @@
                   <span class="mini-note">Clique no botão acima para entrar no sistema.</span>
                   <div class="mini-note">Para profissionais, mantenha o PIN em mãos.</div>
                 </div>
-                <a class="btn btn-dark btn-small" href="{{ url_for('agendamentos') }}">Ver horários</a>
+                <a class="btn btn-dark btn-small" href="{{ url_for('main.agendamentos') }}">Ver horários</a>
               </div> -->
             </div>
           </div>
@@ -189,7 +189,7 @@
           <p>Continue para a plataforma mantendo a mesma experiência visual e linguagem acolhedora.</p>
         </div>
         <div class="landing-cta-actions">
-          <a class="btn btn-primary" href="{{ url_for('app_home') }}">Ir para o sistema</a>
+          <a class="btn btn-primary" href="{{ url_for('main.app_home') }}">Ir para o sistema</a>
           <a class="btn btn-dark" href="{{ url_for('main.login') }}">Sou paciente</a>
         </div>
       </div>
@@ -209,7 +209,7 @@
         </div>
         <div class="landing-footer-right">
           <span class="mini-note">© KidsCare clinic. Cuidado centrado na neurodiversidade.</span>
-          <!-- <a class="btn btn-primary btn-small" href="{{ url_for('app_home') }}">Entrar no sistema</a> -->
+          <!-- <a class="btn btn-primary btn-small" href="{{ url_for('main.app_home') }}">Entrar no sistema</a> -->
         </div>
       </div>
     </footer>
