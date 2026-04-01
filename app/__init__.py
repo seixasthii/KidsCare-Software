@@ -2,7 +2,6 @@ from flask import Flask
 from config import Config
 
 def create_app(config_class=Config):
-    """Fábrica para criar e configurar a instância do Flask."""
     app = Flask(__name__, template_folder='../templates', static_folder='../static')
     app.config.from_object(config_class)
     

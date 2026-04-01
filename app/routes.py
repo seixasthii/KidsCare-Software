@@ -8,7 +8,7 @@ from .supabase_client import supabase
 bp = Blueprint('main', __name__)
 
 # ------------------------------
-# MIDDLEWARES (DECORATORS)
+# MIDDLEWARES (DECORATORS)/RULES
 # ------------------------------
 
 def login_required(f):
